@@ -6,7 +6,7 @@ import 'package:smart_fitness_iot/widgets.dart';
 import 'dart:convert' show utf8;
 
 void main() {
-  runApp(new FlutterBlueApp());
+  runApp(FlutterBlueApp());
 }
 
 class FlutterBlueApp extends StatefulWidget {
@@ -15,7 +15,7 @@ class FlutterBlueApp extends StatefulWidget {
   final String title;
 
   @override
-  _FlutterBlueAppState createState() => new _FlutterBlueAppState();
+  _FlutterBlueAppState createState() => _FlutterBlueAppState();
 }
 
 class _FlutterBlueAppState extends State<FlutterBlueApp> {
@@ -23,14 +23,14 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
 
   //PS HexDecoder ถอดรหัสหลังจากรับข้อมูลจาก BLE
   var decoded;
-  String xDrum='';//เอาไว้ตัด String เพื่อแสดง
-  String xDrum_1='';//เอาไว้แสดงผล
-  String xDrum_2='';
-  String xDrum_3='';
+  String xDrum = ''; //เอาไว้ตัด String เพื่อแสดง
+  String xDrum_1 = ''; //เอาไว้แสดงผล
+  String xDrum_2 = '';
+  String xDrum_3 = '';
 
   /// Scanning
   StreamSubscription _scanSubscription;
-  Map<DeviceIdentifier, ScanResult> scanResults = new Map();
+  Map<DeviceIdentifier, ScanResult> scanResults = Map();
   bool isScanning = false;
 
   /// State
@@ -42,7 +42,7 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
   bool get isConnected => (device != null);
   StreamSubscription deviceConnection;
   StreamSubscription deviceStateSubscription;
-  List<BluetoothService> services = new List();
+  List<BluetoothService> services = List();
   Map<Guid, StreamSubscription> valueChangedSubscriptions = {};
   BluetoothDeviceState deviceState = BluetoothDeviceState.disconnected;
 
@@ -79,7 +79,7 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
         .scan(
       timeout: const Duration(seconds: 5),
       /*withServices: [
-          new Guid('0000180F-0000-1000-8000-00805F9B34FB')
+           Guid('0000180F-0000-1000-8000-00805F9B34FB')
         ]*/
     )
         .listen((scanResult) {
@@ -188,14 +188,14 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
           print('');
           print('Receive Data Encode : $d');
           decoded = utf8.decode(d);
-          print('Receive Data Decode : ' +decoded);  //ต้องการเอาค่านี้ไปแสดงเพื่อให้เห็นตัวเลข
+          print('Receive Data Decode : ' +
+              decoded); //ต้องการเอาค่านี้ไปแสดงเพื่อให้เห็นตัวเลข
           //xDrum=decoded.toString();
           _subString(decoded);
           print('');
           print('<---- End of Receive Data ---->');
           print('');
           print('');
-
         });
       });
       // Add to map
@@ -204,29 +204,21 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
     setState(() {});
   }
 
-  _subString(String xValue){
-    xDrum = xValue.substring(0,2);
+  _subString(String xValue) {
+    xDrum = xValue.substring(0, 2);
 
-    if (xDrum=='1X')
-      {
-        xDrum_1=xValue.replaceRange(0, 2, '');
-      }
-    else if (xDrum=='2X')
-      {
-        xDrum_2=xValue.replaceRange(0, 2, '');
-      }
-    else if (xDrum=='3X')
-      {
-        xDrum_3=xValue.replaceRange(0, 2, '');
-      }
+    if (xDrum == '1X') {
+      xDrum_1 = xValue.replaceRange(0, 2, '');
+    } else if (xDrum == '2X') {
+      xDrum_2 = xValue.replaceRange(0, 2, '');
+    } else if (xDrum == '3X') {
+      xDrum_3 = xValue.replaceRange(0, 2, '');
+    }
 
     print('X1 Value is : $xDrum_1');
     print('X2 Value is : $xDrum_2');
     print('X3 Value is : $xDrum_3');
-
-
-
-}
+  }
 
   _refreshDeviceState(BluetoothDevice d) async {
     var state = await d.state;
@@ -241,14 +233,14 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
       return null;
     }
     if (isScanning) {
-      return new FloatingActionButton(
-        child: new Icon(Icons.stop),
+      return FloatingActionButton(
+        child: Icon(Icons.stop),
         onPressed: _stopScan,
         backgroundColor: Colors.red,
       );
     } else {
-      return new FloatingActionButton(
-          child: new Icon(Icons.search), onPressed: _startScan);
+      return FloatingActionButton(
+          child: Icon(Icons.search), onPressed: _startScan);
     }
   }
 
@@ -264,18 +256,18 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
   List<Widget> _buildServiceTiles() {
     return services
         .map(
-          (s) => new ServiceTile(
+          (s) => ServiceTile(
                 service: s,
                 characteristicTiles: s.characteristics
                     .map(
-                      (c) => new CharacteristicTile(
+                      (c) => CharacteristicTile(
                             characteristic: c,
                             onReadPressed: () => _readCharacteristic(c),
                             onWritePressed: () => _writeCharacteristic(c),
                             onNotificationPressed: () => _setNotification(c),
                             descriptorTiles: c.descriptors
                                 .map(
-                                  (d) => new DescriptorTile(
+                                  (d) => DescriptorTile(
                                         descriptor: d,
                                         onReadPressed: () => _readDescriptor(d),
                                         onWritePressed: () =>
@@ -294,7 +286,7 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
   _buildActionButtons() {
     if (isConnected) {
       return <Widget>[
-        new IconButton(
+        IconButton(
           icon: const Icon(Icons.cancel),
           onPressed: () => _disconnect(),
         )
@@ -303,14 +295,14 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
   }
 
   _buildAlertTile() {
-    return new Container(
+    return Container(
       color: Colors.redAccent,
-      child: new ListTile(
-        title: new Text(
+      child: ListTile(
+        title: Text(
           'Bluetooth adapter is ${state.toString().substring(15)}',
           style: Theme.of(context).primaryTextTheme.subhead,
         ),
-        trailing: new Icon(
+        trailing: Icon(
           Icons.error,
           color: Theme.of(context).primaryTextTheme.subhead.color,
         ),
@@ -319,13 +311,13 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
   }
 
   _buildDeviceStateTile() {
-    return new ListTile(
+    return ListTile(
         leading: (deviceState == BluetoothDeviceState.connected)
             ? const Icon(Icons.bluetooth_connected)
             : const Icon(Icons.bluetooth_disabled),
-        title: new Text('Device is ${deviceState.toString().split('.')[1]}.'),
-        subtitle: new Text('${device.id}'),
-        trailing: new IconButton(
+        title: Text('Device is ${deviceState.toString().split('.')[1]}.'),
+        subtitle: Text('${device.id}'),
+        trailing: IconButton(
           icon: const Icon(Icons.refresh),
           onPressed: () => _refreshDeviceState(device),
           color: Theme.of(context).iconTheme.color.withOpacity(0.5),
@@ -333,12 +325,12 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
   }
 
   _buildProgressBarTile() {
-    return new LinearProgressIndicator();
+    return LinearProgressIndicator();
   }
 
   @override
   Widget build(BuildContext context) {
-    var tiles = new List<Widget>();
+    var tiles = List<Widget>();
     if (state != BluetoothState.on) {
       tiles.add(_buildAlertTile());
     }
@@ -348,17 +340,17 @@ class _FlutterBlueAppState extends State<FlutterBlueApp> {
     } else {
       tiles.addAll(_buildScanResultTiles());
     }
-    return new MaterialApp(
-      home: new Scaffold(
-        appBar: new AppBar(
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
           title: const Text('Smart Fitness IoT'),
           actions: _buildActionButtons(),
         ),
         floatingActionButton: _buildScanningButton(),
-        body: new Stack(
+        body: Stack(
           children: <Widget>[
-            (isScanning) ? _buildProgressBarTile() : new Container(),
-            new ListView(
+            (isScanning) ? _buildProgressBarTile() : Container(),
+            ListView(
               children: tiles,
             )
           ],

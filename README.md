@@ -1,6 +1,6 @@
 # smart_fitness_iot
-This is a Final Project for get data from Bluetooth LE 
-.
+This is a Final Project for get data from Bluetooth LE
+
 ทำได้แล้วคือ 
 1. รับค่าจาก BLE และ Decode พร้อมทั้งแยกประเภทข้อมูล . 3 ประเภทคือ ไว้ใน 3 ตัวแปรคือ xDrum_1, xDrum_2, xDrum_3
 
